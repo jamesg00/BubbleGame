@@ -26,6 +26,18 @@ logo_angle = 0
 
 logo2_image = pygame.image.load('assets/logo2.png')
 
+
+# Load "How to Play" image
+how_to_play_image = pygame.image.load('assets/pngwing.png')
+how_to_play_image = pygame.transform.scale(how_to_play_image, (WIDTH, HEIGHT))
+
+
+# Load close button image
+close_button_image = pygame.image.load('assets/458594.png')
+close_button_image = pygame.transform.scale(close_button_image, (50, 50))
+close_button_rect = close_button_image.get_rect(topright=(WIDTH - 10, 10))
+
+
 # Dot properties
 dot_color = (255, 0, 0)  
 dot_radius = 10  
@@ -265,6 +277,13 @@ def show_menu():
     wn.blit(logo2_surface, (logo2_x, logo2_y))
     wn.blit(question_button_image, question_button_rect)
 
+
+def show_instructions():
+    wn.blit(background_image, (0,0))
+    wn.blit(how_to_play_image, (0, 0))
+    wn.blit(close_button_image, close_button_rect)
+
+
 def show_end_screen():
     wn.blit(background_image, (0,0))
     end_font = pygame.font.SysFont(None, 55)
@@ -290,6 +309,12 @@ while run:
         if event.type == pygame.QUIT:
             run = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
+            if game_state == "menu":
+                if question_button_rect.collidepoint(event.pos):
+                    game_state = "instructions"
+            elif game_state == "instructions":
+                if close_button_rect.collidepoint(event.pos):
+                    game_state = "menu"
             if game_state in ["end", "win"]:
                 reset_game()
         elif event.type == pygame.KEYDOWN:
@@ -304,6 +329,8 @@ while run:
         draw_star()
         show_menu()
         pygame.mouse.set_visible(True)
+    elif game_state == "instructions":
+        show_instructions()
     elif game_state == "game":
         wn.blit(background_image, (0,0))
         show_game_stats()
